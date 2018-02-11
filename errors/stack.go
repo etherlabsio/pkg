@@ -1,5 +1,7 @@
 package errors
 
+// code borrowed from github.com/pkg/errors for re-use
+
 import (
 	"fmt"
 	"io"
