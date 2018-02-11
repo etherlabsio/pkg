@@ -28,6 +28,8 @@ type Error struct {
 	// Used along with the wrap function to bind more context to the error
 	// when it is propagated back up the call chain
 	msg
+
+	*stack
 }
 
 func (e *Error) isZero() bool {
@@ -37,6 +39,10 @@ func (e *Error) isZero() bool {
 var (
 	_ error = (*Error)(nil)
 )
+
+type debug bool
+
+const Trace debug = true
 
 // Op describes an operation, usually as the package and method,
 // such as "key/server.Lookup".
@@ -120,6 +126,8 @@ func New(args ...interface{}) error {
 			e.Err = arg
 		case msg:
 			e.msg = arg
+		case debug:
+			e.stack = callers()
 		default:
 			_, file, line, _ := runtime.Caller(1)
 			log.Printf("errors.E: bad call from %s:%d: %v", file, line, args)
@@ -140,15 +148,16 @@ func New(args ...interface{}) error {
 
 	// If this error has Kind unset or Other, pull up the inner one.
 	if e.Kind == Other {
-		e.Kind = prev.Kind
-		prev.Kind = Other
+		e.Kind, prev.Kind = prev.Kind, Other
 	}
 
 	// If this error has Op unset, pull up the inner one.
 	if e.Op == "" {
-		e.Op = prev.Op
-		prev.Op = ""
+		e.Op, prev.Op = prev.Op, ""
 	}
+
+	e.stack, prev.stack = prev.stack, nil
+
 	return e
 }
 
@@ -163,15 +172,15 @@ func pad(b *bytes.Buffer, str string) {
 func (e *Error) Error() string {
 	b := new(bytes.Buffer)
 	if e.Op != "" {
-		pad(b, ": ")
+		pad(b, Separator)
 		b.WriteString(string(e.Op))
 	}
 	if e.Kind != 0 {
-		pad(b, ": ")
+		pad(b, Separator)
 		b.WriteString(e.Kind.String())
 	}
 	if e.msg != "" {
-		pad(b, ": ")
+		pad(b, Separator)
 		b.WriteString(string(e.msg))
 	}
 	if e.Err != nil {
@@ -182,9 +191,13 @@ func (e *Error) Error() string {
 				b.WriteString(e.Err.Error())
 			}
 		} else {
-			pad(b, ": ")
+			pad(b, Separator)
 			b.WriteString(e.Err.Error())
 		}
+	}
+	if e.stack != nil {
+		pad(b, Separator)
+		b.WriteString(fmt.Sprintf("%+v", e.stack.StackTrace()))
 	}
 	if b.Len() == 0 {
 		return "no error"
