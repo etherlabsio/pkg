@@ -27,7 +27,7 @@ func TestDoesNotChangePreviousError(t *testing.T) {
 	err2 := New(Op("I will NOT modify err"), err)
 
 	expected := "I will NOT modify err: 2"
-	if errorAsString(err2) != expected {
+	if err2.Error() != expected {
 		t.Fatalf("Expected %q, got %q", expected, err2)
 	}
 	kind := err.(*Error).Kind
@@ -49,8 +49,8 @@ func TestSeparator(t *testing.T) {
 	e2 := New(Op("Read"), Other, e1)
 
 	want := "Read: 3:: Get: network unreachable"
-	if errorAsString(e2) != want {
-		t.Errorf("expected %q; got %q", want, e2)
+	if got := e2.Error(); got != want {
+		t.Errorf("expected %q; got %q", want, got)
 	}
 }
 
@@ -62,17 +62,6 @@ func TestNoArgs(t *testing.T) {
 		}
 	}()
 	_ = New()
-}
-
-// errorAsString returns the string form of the provided error value.
-// If the given string is an *Error, the stack information is removed
-// before the value is stringified.
-func errorAsString(err error) string {
-	if e, ok := err.(*Error); ok {
-		e2 := *e
-		return e2.Error()
-	}
-	return err.Error()
 }
 
 type matchTest struct {

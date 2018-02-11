@@ -170,17 +170,18 @@ func pad(b *bytes.Buffer, str string) {
 }
 
 func (e *Error) Error() string {
+	const separator = ": "
 	b := new(bytes.Buffer)
 	if e.Op != "" {
-		pad(b, Separator)
+		pad(b, separator)
 		b.WriteString(string(e.Op))
 	}
 	if e.Kind != 0 {
-		pad(b, Separator)
+		pad(b, separator)
 		b.WriteString(e.Kind.String())
 	}
 	if e.msg != "" {
-		pad(b, Separator)
+		pad(b, separator)
 		b.WriteString(string(e.msg))
 	}
 	if e.Err != nil {
@@ -191,12 +192,12 @@ func (e *Error) Error() string {
 				b.WriteString(e.Err.Error())
 			}
 		} else {
-			pad(b, Separator)
+			pad(b, separator)
 			b.WriteString(e.Err.Error())
 		}
 	}
 	if e.stack != nil {
-		pad(b, Separator)
+		pad(b, separator)
 		b.WriteString(fmt.Sprintf("%+v", e.stack.StackTrace()))
 	}
 	if b.Len() == 0 {
