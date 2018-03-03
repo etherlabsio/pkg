@@ -119,13 +119,13 @@ var kindTests = []kindTest{
 
 	// Basic comparisons.
 	{New(NotExist), NotExist, true},
-	{New(Exist), NotExist, false},
+	{New(AlreadyExist), NotExist, false},
 	{New("no kind"), NotExist, false},
 	{New("no kind"), Other, false},
 
 	// Nested *Error values.
 	{New("Nesting", New(NotExist)), NotExist, true},
-	{New("Nesting", New(Exist)), NotExist, false},
+	{New("Nesting", New(AlreadyExist)), NotExist, false},
 	{New("Nesting", New("no kind")), NotExist, false},
 	{New("Nesting", New("no kind")), Other, false},
 }

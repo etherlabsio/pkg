@@ -72,13 +72,13 @@ type msg string
 // any items since that will change their values.
 // New items must be added only to the end.
 const (
-	Other      Kind = iota // Unclassified error. This value is not printed in the error message.
-	Invalid                // Invalid operation for this type of item.
-	Permission             // Permission denied.
-	IO                     // External I/O error such as network failure.
-	Exist                  // Item already exists.
-	NotExist               // Item does not exist.
-	Internal               // Internal error or inconsistency.
+	Other        Kind = iota // Unclassified error. This value is not printed in the error message.
+	Invalid                  // Invalid operation for this type of item.
+	Permission               // Permission denied.
+	IO                       // External I/O error such as network failure.
+	AlreadyExist             // Item already exists.
+	NotExist                 // Item does not exist.
+	Internal                 // Internal error or inconsistency.
 )
 
 // New builds an error value from its arguments.
