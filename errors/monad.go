@@ -8,13 +8,13 @@ type Monad struct {
 	defers []func()
 }
 
-// Maybe returns a monad
-func Maybe(fn failableFunc) Monad {
+// Do returns a monad
+func Do(fn failableFunc) Monad {
 	return Monad{}.wrap(fn())
 }
 
-// Maybe returns a monad
-func (e Monad) Maybe(fn failableFunc) Monad {
+// Do returns a monad
+func (e Monad) Do(fn failableFunc) Monad {
 	if e.err != nil {
 		return e
 	}
