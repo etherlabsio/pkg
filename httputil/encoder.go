@@ -5,14 +5,13 @@ import (
 	"encoding/json"
 	"net/http"
 
-	kithttp "github.com/go-kit/kit/transport/http"
 	"gitlab.com/etherlabs/pkg/errors"
 )
 
 var errYouAreDoingItWrong = errors.New("programmer error")
 
 // DefaultErrorEncoder takes in a status coder and returns an HTTP error encoder
-func DefaultErrorEncoder(statusCoder func(err error) int) kithttp.ErrorEncoder {
+func DefaultErrorEncoder(statusCoder func(err error) int) func(_ context.Context, err error, w http.ResponseWriter) {
 	return func(_ context.Context, err error, w http.ResponseWriter) {
 		if err == nil {
 			err = errors.WithMessage(errYouAreDoingItWrong, "encodeError received nil error")
