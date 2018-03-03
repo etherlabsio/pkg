@@ -9,7 +9,7 @@ import (
 type jsonMarshal struct {
 	ID  Kind   `json:"id"`
 	Op  Op     `json:"op,omitempty"`
-	Msg string `json:"msg"`
+	Msg string `json:"msg,omitempty"`
 }
 
 // MarshalJSON converts the err object to the JSON representation
@@ -17,8 +17,6 @@ func (e Error) MarshalJSON() ([]byte, error) {
 	var err jsonMarshal
 	if e.Kind > Other {
 		err.ID = e.Kind
-	} else {
-		err.ID = Internal
 	}
 
 	if e.Op != "" {
@@ -58,7 +56,7 @@ func (e errorString) MarshalJSON() ([]byte, error) {
 	if e.s != "" {
 		err.Msg = e.s
 	}
-	err.ID = Internal
+	err.ID = Other
 	return json.Marshal(err)
 }
 
