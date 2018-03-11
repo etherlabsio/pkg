@@ -16,3 +16,6 @@ debug
 
 # Bin directory
 /bin
+
+# No VSCode
+.vscode/
