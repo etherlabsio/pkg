@@ -8,8 +8,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"gitlab.com/etherlabs/pkg/env"
-	"gitlab.com/etherlabs/pkg/errors"
+	"github.com/etherlabsio/pkg/env"
+	"github.com/etherlabsio/pkg/errors"
 )
 
 const (

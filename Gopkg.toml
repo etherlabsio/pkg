@@ -20,3 +20,10 @@
 #  name = "github.com/x/y"
 #  version = "2.4.0"
 
+[[constraint]]
+  name = "github.com/go-kit/kit"
+  version = "0.7.0"
+
+[[constraint]]
+  name = "github.com/pkg/errors"
+  branch = "master"

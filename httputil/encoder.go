@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"gitlab.com/etherlabs/pkg/errors"
+	"github.com/etherlabsio/pkg/errors"
 )
 
 var errYouAreDoingItWrong = errors.New("programmer error")
