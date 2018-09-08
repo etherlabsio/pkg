@@ -77,9 +77,12 @@ func NewServerLogger(debug bool) log.Logger {
 	return &swapLogger
 }
 
+// WithError returns a logger with severity as error along with the err value encapsulated
 func WithError(l log.Logger, err error) log.Logger {
 	if err != nil {
-		return level.Error(l)
+		return level.Error(
+			log.With(l, "err", err),
+		)
 	}
 	return l
 }
