@@ -76,3 +76,10 @@ func NewServerLogger(debug bool) log.Logger {
 	}()
 	return &swapLogger
 }
+
+func WithError(l log.Logger, err error) log.Logger {
+	if err != nil {
+		return level.Error(l)
+	}
+	return l
+}
