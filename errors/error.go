@@ -1,7 +1,3 @@
-// Package errors defines the error handling used by all Ether backend systems.
-// Function definition inspiration derived from github.com/pkg/errors
-// Design inpiration derived from github.com/upspin/errors
-// Thank you Rob Pike :P
 package errors
 
 import (
@@ -12,48 +8,11 @@ import (
 	"strconv"
 )
 
-// Error is the type that implements the error interface.
-// It contains a number of fields, each of different type.
-// An Error value may leave some values unset.
-type Error struct {
-	// Op is the operation being performed, usually the name of the method
-	// being invoked (Get, Put, etc.). It should not contain an at sign @.
-	Op Op
-	// Kind is the class of error, such as permission failure,
-	// or "Other" if its class is unknown or irrelevant.
-	Kind Kind
-	// The underlying error that triggered this one, if any.
-	Err error
-
-	// Used along with the wrap function to bind more context to the error
-	// when it is propagated back up the call chain
-	msg
-
-	*stack
-}
-
-func (e *Error) isZero() bool {
-	return e.Op == "" && e.Kind == 0 && e.Err == nil
-}
-
-var (
-	_ error = (*Error)(nil)
-)
-
-type debug bool
-
-const Trace debug = true
+var _ error = (*Error)(nil)
 
 // Op describes an operation, usually as the package and method,
 // such as "key/server.Lookup".
 type Op string
-
-// Separator is the string used to separate nested errors. By
-// default, to make errors easier on the eye, nested errors are
-// indented on a new line. A server may instead choose to keep each
-// error on a single line by modifying the separator string, perhaps
-// to ":: ".
-var Separator = ": "
 
 // Kind defines the kind of error this is, mostly for use by systems
 // such as FUSE that must act differently depending on the error.
@@ -63,8 +22,6 @@ func (k Kind) String() string {
 	return strconv.Itoa(int(k))
 }
 
-type msg string
-
 // Kinds of errors.
 //
 // The values of the error kinds are common between both
@@ -72,14 +29,26 @@ type msg string
 // any items since that will change their values.
 // New items must be added only to the end.
 const (
-	Other        Kind = iota // Unclassified error. This value is not printed in the error message.
+	Internal     Kind = iota // Internal error or inconsistency.
 	Invalid                  // Invalid operation for this type of item.
 	Permission               // Permission denied.
 	IO                       // External I/O error such as network failure.
 	AlreadyExist             // Item already exists.
 	NotExist                 // Item does not exist.
-	Internal                 // Internal error or inconsistency.
 )
+
+// Error is the type that implements the error interface.
+// It contains a number of fields, each of different type.
+// An Error value may leave some values unset.
+type Error struct {
+	// Op is the operation being performed, usually the name of the method
+	// being invoked (Get, Put, etc.). It should not contain an at sign @.
+	op Op
+	// Kind is the class of error, such as permission failure,
+	// or "Other" if its class is unknown or irrelevant.
+	kind  Kind
+	cause error
+}
 
 // New builds an error value from its arguments.
 // There must be at least one argument or New panics.
@@ -88,13 +57,13 @@ const (
 // only the last one is recorded.
 //
 // The types are:
-//	errors.Op
+//	errors.op
 //		The operation being performed, usually the method
 //		being invoked (Get, Put, etc.).
 //	string
 //		Treated as an error message and assigned to the
 //		Err field after a call to errors.Str.
-//	errors.Kind
+//	errors.kind
 //		The class of error, such as permission failure.
 //	error
 //		The underlying error that triggered this one.
@@ -102,7 +71,7 @@ const (
 // If the error is printed, only those items that have been
 // set to non-zero values will appear in the result.
 //
-// If Kind is not specified or Other, we set it to the Kind of
+// If Kind is not specified or Internal, we set it to the Kind of
 // the underlying error.
 //
 func New(args ...interface{}) error {
@@ -113,21 +82,17 @@ func New(args ...interface{}) error {
 	for _, arg := range args {
 		switch arg := arg.(type) {
 		case Op:
-			e.Op = arg
+			e.op = arg
 		case string:
-			e.Err = Str(arg)
+			e.cause = Str(arg)
 		case Kind:
-			e.Kind = arg
+			e.kind = arg
 		case *Error:
 			// Make a copy
 			copy := *arg
-			e.Err = &copy
+			e.cause = &copy
 		case error:
-			e.Err = arg
-		case msg:
-			e.msg = arg
-		case debug:
-			e.stack = callers()
+			e.cause = arg
 		default:
 			_, file, line, _ := runtime.Caller(1)
 			log.Printf("errors.E: bad call from %s:%d: %v", file, line, args)
@@ -135,29 +100,21 @@ func New(args ...interface{}) error {
 		}
 	}
 
-	prev, ok := e.Err.(*Error)
+	prev, ok := e.cause.(*Error)
 	if !ok {
 		return e
 	}
 
 	// The previous error was also one of ours. Suppress duplications
 	// so the message won't contain the same kind twice.
-	if prev.Kind == e.Kind {
-		prev.Kind = Other
+	if prev.kind == e.kind {
+		return e
 	}
 
 	// If this error has Kind unset or Other, pull up the inner one.
-	if e.Kind == Other {
-		e.Kind, prev.Kind = prev.Kind, Other
+	if e.kind == Internal {
+		e.kind, prev.kind = prev.kind, Internal
 	}
-
-	// If this error has Op unset, pull up the inner one.
-	if e.Op == "" {
-		e.Op, prev.Op = prev.Op, ""
-	}
-
-	e.stack, prev.stack = prev.stack, nil
-
 	return e
 }
 
@@ -171,37 +128,15 @@ func pad(b *bytes.Buffer, str string) {
 
 func (e *Error) Error() string {
 	const separator = ": "
+
 	b := new(bytes.Buffer)
-	if e.Op != "" {
+	if e.op != "" {
 		pad(b, separator)
-		b.WriteString(string(e.Op))
+		b.WriteString(string(e.op))
 	}
-	if e.Kind != 0 {
+	if e.cause != nil {
 		pad(b, separator)
-		b.WriteString(e.Kind.String())
-	}
-	if e.msg != "" {
-		pad(b, separator)
-		b.WriteString(string(e.msg))
-	}
-	if e.Err != nil {
-		// Indent on new line if we are cascading non-empty Upspin errors.
-		if prevErr, ok := e.Err.(*Error); ok {
-			if !prevErr.isZero() {
-				pad(b, Separator)
-				b.WriteString(e.Err.Error())
-			}
-		} else {
-			pad(b, separator)
-			b.WriteString(e.Err.Error())
-		}
-	}
-	if e.stack != nil {
-		pad(b, separator)
-		b.WriteString(fmt.Sprintf("%+v", e.stack.StackTrace()))
-	}
-	if b.Len() == 0 {
-		return "no error"
+		b.WriteString(e.cause.Error())
 	}
 	return b.String()
 }
@@ -228,58 +163,4 @@ func (e *errorString) Error() string {
 // package for all error handling.
 func Errorf(format string, args ...interface{}) error {
 	return &errorString{fmt.Sprintf(format, args...)}
-}
-
-// Match compares its two error arguments. It can be used to check
-// for expected errors in tests. Both arguments must have underlying
-// type *Error or Match will return false. Otherwise it returns true
-// iff every non-zero element of the first error is equal to the
-// corresponding element of the second.
-// If the Err field is a *Error, Match recurs on that field;
-// otherwise it compares the strings returned by the Error methods.
-// Elements that are in the second argument but not present in
-// the first are ignored.
-//
-// For example,
-//	Match(errors.E(errors.Permission), err)
-func Match(err1, err2 error) bool {
-	e1, ok := err1.(*Error)
-	if !ok {
-		return false
-	}
-	e2, ok := err2.(*Error)
-	if !ok {
-		return false
-	}
-	if e1.Op != "" && e2.Op != e1.Op {
-		return false
-	}
-	if e1.Kind != Other && e2.Kind != e1.Kind {
-		return false
-	}
-	if e1.Err != nil {
-		if _, ok := e1.Err.(*Error); ok {
-			return Match(e1.Err, e2.Err)
-		}
-		if e2.Err == nil || e2.Err.Error() != e1.Err.Error() {
-			return false
-		}
-	}
-	return true
-}
-
-// Is reports whether err is an *Error of the given Kind.
-// If err is nil then Is returns false.
-func Is(kind Kind, err error) bool {
-	e, ok := err.(*Error)
-	if !ok {
-		return false
-	}
-	if e.Kind != Other {
-		return e.Kind == kind
-	}
-	if e.Err != nil {
-		return Is(kind, e.Err)
-	}
-	return false
 }
