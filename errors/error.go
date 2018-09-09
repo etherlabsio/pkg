@@ -8,8 +8,7 @@ import (
 	"strconv"
 )
 
-const separator = ":: "
-const opSeparator = ": "
+const separator = ": "
 
 var _ error = (*Error)(nil)
 
@@ -121,10 +120,12 @@ func (e *Error) Cause() error {
 
 func (e *Error) Error() string {
 	b := new(bytes.Buffer)
-	b.WriteString(string(e.msg))
 	if e.op != "" {
-		pad(b, separator)
 		b.WriteString(string(e.op))
+	}
+	if e.msg != "" {
+		pad(b, separator)
+		b.WriteString(string(e.msg))
 	}
 	if e.cause != nil {
 		pad(b, separator)

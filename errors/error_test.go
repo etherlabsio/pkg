@@ -14,9 +14,9 @@ func TestKind_String(t *testing.T) {
 
 func TestDoesNotChangePreviousError(t *testing.T) {
 	err := New("new error", Permission)
-	err2 := New("wrapped context", Op("I will NOT modify err"), err)
+	err2 := New("wrapped context", Op("op"), err)
 
-	expected := "wrapped context: I will NOT modify err: new error"
+	expected := "op" + separator + "wrapped context" + separator + "new error"
 	if err2.Error() != expected {
 		t.Fatalf("Expected %q, got %q", expected, err2)
 	}
@@ -48,8 +48,8 @@ func TestError_Cause(t *testing.T) {
 func TestError_Error(t *testing.T) {
 	err1 := New("new error", Permission)
 	err2 := New("wrapped context", Op("I will NOT modify err"), err1)
-	// l3op := Op("someFunc")
-	// err3 := New("level3 err", l3op, Internal, err2)
+	l3op := Op("someFunc")
+	err3 := New("level3 err", l3op, Internal, err2)
 	type fields struct {
 		op       Op
 		withKind *withKind
@@ -65,9 +65,14 @@ func TestError_Error(t *testing.T) {
 			"new error",
 		},
 		{
-			"level1 Error()",
+			"level2 Error()",
 			err2,
-			"wrapped context: I will NOT modify err: new error",
+			"I will NOT modify err: wrapped context: new error",
+		},
+		{
+			"level3 Error()",
+			err3,
+			"someFunc: level3 err: I will NOT modify err: wrapped context: new error",
 		},
 	}
 	for _, tt := range tests {
