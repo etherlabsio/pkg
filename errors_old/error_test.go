@@ -5,23 +5,6 @@ import (
 	"testing"
 )
 
-func TestErrorf(t *testing.T) {
-	tests := []struct {
-		err  error
-		want string
-	}{
-		{Errorf("read error without format specifiers"), "read error without format specifiers"},
-		{Errorf("read error with %d format specifier", 1), "read error with 1 format specifier"},
-	}
-
-	for _, tt := range tests {
-		got := tt.err.Error()
-		if got != tt.want {
-			t.Errorf("Errorf(%v): got: %q, want %q", tt.err, got, tt.want)
-		}
-	}
-}
-
 func TestDoesNotChangePreviousError(t *testing.T) {
 	err := New(Permission)
 	err2 := New(Op("I will NOT modify err"), err)

@@ -8,6 +8,9 @@ import (
 	"strconv"
 )
 
+const separator = ":: "
+const opSeparator = ": "
+
 var _ error = (*Error)(nil)
 
 // Op describes an operation, usually as the package and method,
@@ -46,8 +49,7 @@ type Error struct {
 	op Op
 	// Kind is the class of error, such as permission failure,
 	// or "Other" if its class is unknown or irrelevant.
-	kind  Kind
-	cause error
+	*withKind
 }
 
 // New builds an error value from its arguments.
@@ -60,9 +62,6 @@ type Error struct {
 //	errors.op
 //		The operation being performed, usually the method
 //		being invoked (Get, Put, etc.).
-//	string
-//		Treated as an error message and assigned to the
-//		Err field after a call to errors.Str.
 //	errors.kind
 //		The class of error, such as permission failure.
 //	error
@@ -74,23 +73,20 @@ type Error struct {
 // If Kind is not specified or Internal, we set it to the Kind of
 // the underlying error.
 //
-func New(args ...interface{}) error {
-	if len(args) == 0 {
-		panic("call to errors.E with no arguments")
+func New(msg string, args ...interface{}) error {
+	e := &Error{
+		withKind: &withKind{
+			msg:  msg,
+			kind: Internal,
+		},
 	}
-	e := &Error{}
+
 	for _, arg := range args {
 		switch arg := arg.(type) {
 		case Op:
 			e.op = arg
-		case string:
-			e.cause = Str(arg)
 		case Kind:
 			e.kind = arg
-		case *Error:
-			// Make a copy
-			copy := *arg
-			e.cause = &copy
 		case error:
 			e.cause = arg
 		default:
@@ -113,23 +109,19 @@ func New(args ...interface{}) error {
 
 	// If this error has Kind unset or Other, pull up the inner one.
 	if e.kind == Internal {
-		e.kind, prev.kind = prev.kind, Internal
+		e.kind = prev.kind
 	}
 	return e
 }
 
-// pad appends str to the buffer if the buffer already has some data.
-func pad(b *bytes.Buffer, str string) {
-	if b.Len() == 0 {
-		return
-	}
-	b.WriteString(str)
+// Cause implements the causer interface
+func (e *Error) Cause() error {
+	return e.withKind.Cause()
 }
 
 func (e *Error) Error() string {
-	const separator = ": "
-
 	b := new(bytes.Buffer)
+	b.WriteString(string(e.msg))
 	if e.op != "" {
 		pad(b, separator)
 		b.WriteString(string(e.op))
@@ -137,6 +129,9 @@ func (e *Error) Error() string {
 	if e.cause != nil {
 		pad(b, separator)
 		b.WriteString(e.cause.Error())
+	}
+	if b.Len() == 0 {
+		return "no error"
 	}
 	return b.String()
 }
@@ -147,20 +142,32 @@ func (e *Error) Error() string {
 // Str returns an error that formats as the given text. It is intended to
 // be used as the error-typed argument to the E function.
 func Str(text string) error {
-	return &errorString{text}
+	if text == "" {
+		_, file, line, _ := runtime.Caller(1)
+		return Errorf("errors.E: bad call from %s:%d", file, line)
+	}
+	return &fundamental{text}
 }
 
-// errorString is a trivial implementation of error.
-type errorString struct {
-	s string
+// fundamental is a trivial implementation of error.
+type fundamental struct {
+	msg string
 }
 
-func (e *errorString) Error() string {
-	return e.s
+func (e *fundamental) Error() string {
+	return e.msg
 }
 
 // Errorf is equivalent to fmt.Errorf, but allows clients to import only this
 // package for all error handling.
 func Errorf(format string, args ...interface{}) error {
-	return &errorString{fmt.Sprintf(format, args...)}
+	return &fundamental{msg: fmt.Sprintf(format, args...)}
+}
+
+// pad appends str to the buffer if the buffer already has some data.
+func pad(b *bytes.Buffer, str string) {
+	if b.Len() == 0 {
+		return
+	}
+	b.WriteString(str)
 }
