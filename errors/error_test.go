@@ -26,7 +26,7 @@ func TestDoesNotChangePreviousError(t *testing.T) {
 	}
 	l3op := Op("someFunc")
 	err3 := New("level3 err", l3op, Internal, err2)
-	e := err3.(*Error)
+	e := err3.(*withOp)
 	if e.op != l3op {
 		t.Fatalf("Expected op %v, got %v", l3op, e.op)
 	}

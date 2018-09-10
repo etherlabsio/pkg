@@ -1,6 +1,7 @@
 package errors
 
 import (
+	"bytes"
 	"fmt"
 
 	errors "github.com/pkg/errors"
@@ -38,7 +39,19 @@ type withOp struct {
 }
 
 func (err *withOp) Error() string {
-	return string(err.op) + separator + err.cause.Error()
+	b := new(bytes.Buffer)
+	if err.op != "" {
+		pad(b, separator)
+		b.WriteString(string(err.op))
+	}
+	if err.cause != nil {
+		pad(b, separator)
+		b.WriteString(err.cause.Error())
+	}
+	if b.Len() == 0 {
+		return "no error"
+	}
+	return b.String()
 }
 
 func (err *withOp) Cause() error {
@@ -50,6 +63,9 @@ func (err *withOp) Cause() error {
 func WithOp(err error, op Op) error {
 	if err == nil {
 		return nil
+	}
+	if op == "" {
+		return err
 	}
 	return &withOp{
 		cause: err,
@@ -63,6 +79,9 @@ func WithOp(err error, op Op) error {
 func WithOpf(err error, op Op, format string, args ...interface{}) error {
 	if err == nil {
 		return nil
+	}
+	if op == "" {
+		return err
 	}
 	return &withOp{
 		cause: errors.WithMessage(err, fmt.Sprintf(format, args...)),
@@ -81,7 +100,19 @@ func (e *withKind) isZero() bool {
 }
 
 func (e *withKind) Error() string {
-	return e.msg + separator + e.cause.Error()
+	b := new(bytes.Buffer)
+	if e.msg != "" {
+		pad(b, separator)
+		b.WriteString(string(e.msg))
+	}
+	if e.cause != nil {
+		pad(b, separator)
+		b.WriteString(e.cause.Error())
+	}
+	if b.Len() == 0 {
+		return "no error"
+	}
+	return b.String()
 }
 
 func (e *withKind) Cause() error {

@@ -15,7 +15,7 @@ func (e *withKind) MarshalJSON() ([]byte, error) {
 	var err jsonError
 	err.Code = e.kind
 	err.Msg = e.msg
-	if e.Cause != nil {
+	if e.cause != nil {
 		err.Cause = e.Cause().Error()
 	}
 	return json.Marshal(err)
@@ -45,10 +45,10 @@ func (e *fundamental) MarshalJSON() ([]byte, error) {
 
 // MarshalJSON converts the err object to the JSON representation
 func (e *Error) MarshalJSON() ([]byte, error) {
-	return e.withKind.MarshalJSON()
+	return e.MarshalJSON()
 }
 
 // UnmarshalJSON deserializes JSON back to Error struct
 func (e *Error) UnmarshalJSON(data []byte) error {
-	return e.withKind.UnmarshalJSON(data)
+	return e.UnmarshalJSON(data)
 }

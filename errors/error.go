@@ -43,11 +43,6 @@ const (
 // It contains a number of fields, each of different type.
 // An Error value may leave some values unset.
 type Error struct {
-	// Op is the operation being performed, usually the name of the method
-	// being invoked (Get, Put, etc.). It should not contain an at sign @.
-	op Op
-	// Kind is the class of error, such as permission failure,
-	// or "Other" if its class is unknown or irrelevant.
 	*withKind
 }
 
@@ -74,67 +69,36 @@ type Error struct {
 //
 func New(msg string, args ...interface{}) error {
 	e := &Error{
-		withKind: &withKind{
+		&withKind{
 			msg:  msg,
 			kind: Internal,
 		},
 	}
 
+	var op Op
 	for _, arg := range args {
 		switch arg := arg.(type) {
 		case Op:
-			e.op = arg
+			op = arg
 		case Kind:
 			e.kind = arg
 		case error:
 			e.cause = arg
+		case *Error:
+			e.cause = arg
+			// The previous error was also one of ours. Suppress duplications
+			// so the message won't contain the same kind twice.
+			// If this error has Kind unset or Other, pull up the inner one.
+			if e.kind != arg.kind && e.kind == Internal {
+				e.kind = arg.kind
+			}
 		default:
 			_, file, line, _ := runtime.Caller(1)
 			log.Printf("errors.E: bad call from %s:%d: %v", file, line, args)
 			return Errorf("unknown type %T, value %v in error call", arg, arg)
 		}
 	}
-
-	prev, ok := e.cause.(*Error)
-	if !ok {
-		return e
-	}
-
-	// The previous error was also one of ours. Suppress duplications
-	// so the message won't contain the same kind twice.
-	if prev.kind == e.kind {
-		return e
-	}
-
-	// If this error has Kind unset or Other, pull up the inner one.
-	if e.kind == Internal {
-		e.kind = prev.kind
-	}
-	return e
-}
-
-// Cause implements the causer interface
-func (e *Error) Cause() error {
-	return e.withKind.Cause()
-}
-
-func (e *Error) Error() string {
-	b := new(bytes.Buffer)
-	if e.op != "" {
-		b.WriteString(string(e.op))
-	}
-	if e.msg != "" {
-		pad(b, separator)
-		b.WriteString(string(e.msg))
-	}
-	if e.cause != nil {
-		pad(b, separator)
-		b.WriteString(e.cause.Error())
-	}
-	if b.Len() == 0 {
-		return "no error"
-	}
-	return b.String()
+	return WithOp(e, op)
 }
 
 // Recreate the errors.New functionality of the standard Go errors package
