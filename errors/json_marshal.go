@@ -11,7 +11,7 @@ type jsonError struct {
 }
 
 // MarshalJSON converts the err object to the JSON representation
-func (e *withKind) MarshalJSON() ([]byte, error) {
+func (e *Error) MarshalJSON() ([]byte, error) {
 	var err jsonError
 	err.Code = e.kind
 	err.Msg = e.msg
@@ -22,7 +22,7 @@ func (e *withKind) MarshalJSON() ([]byte, error) {
 }
 
 // UnmarshalJSON deserializes JSON back to Error struct
-func (e *withKind) UnmarshalJSON(data []byte) error {
+func (e *Error) UnmarshalJSON(data []byte) error {
 	var err jsonError
 	if err := json.Unmarshal(data, &err); err != nil {
 		return err
@@ -43,12 +43,12 @@ func (e *fundamental) MarshalJSON() ([]byte, error) {
 	return json.Marshal(err)
 }
 
-// MarshalJSON converts the err object to the JSON representation
-func (e *Error) MarshalJSON() ([]byte, error) {
-	return e.MarshalJSON()
-}
+// // MarshalJSON converts the err object to the JSON representation
+// func (e *Error) MarshalJSON() ([]byte, error) {
+// 	return e.MarshalJSON()
+// }
 
-// UnmarshalJSON deserializes JSON back to Error struct
-func (e *Error) UnmarshalJSON(data []byte) error {
-	return e.UnmarshalJSON(data)
-}
+// // UnmarshalJSON deserializes JSON back to Error struct
+// func (e *Error) UnmarshalJSON(data []byte) error {
+// 	return e.UnmarshalJSON(data)
+// }

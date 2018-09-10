@@ -1,5 +1,7 @@
 package errors
 
+import errors "github.com/pkg/errors"
+
 type causer interface {
 	Cause() error
 }
@@ -20,14 +22,26 @@ type kinder interface {
 // be returned. If the error is nil, nil will be returned without further
 // investigation.
 func Cause(err error) error {
+	return errors.Cause(err)
+}
+
+// Unwrap returns the underlying Error type using causer or create a new *Error type
+func Unwrap(err error) error {
 	for err != nil {
+		_, ok := err.(kinder)
+		if ok {
+			return err
+		}
 		cause, ok := err.(causer)
 		if !ok {
 			break
 		}
 		err = cause.Cause()
 	}
-	return err
+	return &Error{
+		msg:  "Internal error or inconsistency",
+		kind: Internal,
+	}
 }
 
 // KindOf returns the underlying kind type of the error, if possible.
@@ -54,22 +68,4 @@ func KindOf(err error) Kind {
 		err = cause.Cause()
 	}
 	return Internal
-}
-
-func errWithKind(err error) *withKind {
-	for err != nil {
-		e, ok := err.(*withKind)
-		if ok {
-			return e
-		}
-		cause, ok := err.(causer)
-		if !ok {
-			break
-		}
-		err = cause.Cause()
-	}
-	return &withKind{
-		msg:  "Internal error or inconsistency",
-		kind: Internal,
-	}
 }

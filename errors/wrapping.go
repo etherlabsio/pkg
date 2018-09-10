@@ -89,50 +89,13 @@ func WithOpf(err error, op Op, format string, args ...interface{}) error {
 	}
 }
 
-type withKind struct {
-	kind  Kind
-	msg   string
-	cause error
-}
-
-func (e *withKind) isZero() bool {
-	return e.msg == "" && e.kind == Internal && e.cause == nil
-}
-
-func (e *withKind) Error() string {
-	b := new(bytes.Buffer)
-	if e.msg != "" {
-		pad(b, separator)
-		b.WriteString(string(e.msg))
-	}
-	if e.cause != nil {
-		pad(b, separator)
-		b.WriteString(e.cause.Error())
-	}
-	if b.Len() == 0 {
-		return "no error"
-	}
-	return b.String()
-}
-
-func (e *withKind) Cause() error {
-	if e.isZero() {
-		return nil
-	}
-	return e.cause
-}
-
-func (e *withKind) Kind() Kind {
-	return e.kind
-}
-
 // WithKind returns an error annotating err with the service specific kind of err
 // at the point WithKind is called. If err is nil, WithKind returns nil.
 func WithKind(err error, kind Kind, msg string) error {
 	if err == nil {
 		return nil
 	}
-	return &withKind{
+	return &Error{
 		cause: err,
 		msg:   msg,
 		kind:  kind,
@@ -146,7 +109,7 @@ func WithKindf(err error, kind Kind, format string, args ...interface{}) error {
 	if err == nil {
 		return nil
 	}
-	return &withKind{
+	return &Error{
 		cause: err,
 		msg:   fmt.Sprintf(format, args...),
 		kind:  kind,

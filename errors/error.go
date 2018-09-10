@@ -10,7 +10,7 @@ import (
 
 const separator = ": "
 
-var _ error = (*Error)(nil)
+// var _ error = (*Error)(nil)
 
 // Op describes an operation, usually as the package and method,
 // such as "key/server.Lookup".
@@ -43,7 +43,42 @@ const (
 // It contains a number of fields, each of different type.
 // An Error value may leave some values unset.
 type Error struct {
-	*withKind
+	kind  Kind
+	msg   string
+	cause error
+}
+
+func (e *Error) isZero() bool {
+	return e.msg == "" && e.kind == Internal && e.cause == nil
+}
+
+func (e *Error) Error() string {
+	b := new(bytes.Buffer)
+	if e.msg != "" {
+		pad(b, separator)
+		b.WriteString(string(e.msg))
+	}
+	if e.cause != nil {
+		pad(b, separator)
+		b.WriteString(e.cause.Error())
+	}
+	if b.Len() == 0 {
+		return "no error"
+	}
+	return b.String()
+}
+
+// Cause specifies the Cause of the underlying error wrapped inside
+func (e *Error) Cause() error {
+	if e.isZero() {
+		return nil
+	}
+	return e.cause
+}
+
+// Kind specifies the Kind of the error
+func (e *Error) Kind() Kind {
+	return e.kind
 }
 
 // New builds an error value from its arguments.
@@ -69,10 +104,8 @@ type Error struct {
 //
 func New(msg string, args ...interface{}) error {
 	e := &Error{
-		&withKind{
-			msg:  msg,
-			kind: Internal,
-		},
+		msg:  msg,
+		kind: Internal,
 	}
 
 	var op Op

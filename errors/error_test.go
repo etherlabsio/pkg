@@ -51,8 +51,8 @@ func TestError_Error(t *testing.T) {
 	l3op := Op("someFunc")
 	err3 := New("level3 err", l3op, Internal, err2)
 	type fields struct {
-		op       Op
-		withKind *withKind
+		op    Op
+		Error *Error
 	}
 	tests := []struct {
 		name string
