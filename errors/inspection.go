@@ -10,6 +10,10 @@ type kinder interface {
 	Kind() Kind
 }
 
+type operation interface {
+	Op() Op
+}
+
 // Cause returns the underlying cause of the error, if possible.
 // An error value has a cause if it implements the following
 // interface:
@@ -25,7 +29,8 @@ func Cause(err error) error {
 	return errors.Cause(err)
 }
 
-// Unwrap returns the underlying Error type using causer or create a new *Error type
+// Unwrap returns the first occurrence of the underlying serializable Error type
+// using causer or create a new *Error type
 func Unwrap(err error) error {
 	for err != nil {
 		_, ok := err.(kinder)

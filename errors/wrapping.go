@@ -33,6 +33,16 @@ func WithMessage(err error, message string) error {
 	return errors.WithMessage(err, message)
 }
 
+// WithMessagef formats an err with a new message.
+// If err is nil, WithMessage returns nil.
+func WithMessagef(err error, format string, args ...interface{}) error {
+	if err == nil {
+		return nil
+	}
+	msg := fmt.Sprintf(format, args...)
+	return errors.WithMessage(err, msg)
+}
+
 type withOp struct {
 	op    Op
 	cause error
@@ -56,6 +66,10 @@ func (err *withOp) Error() string {
 
 func (err *withOp) Cause() error {
 	return err.cause
+}
+
+func (err *withOp) Op() Op {
+	return err.op
 }
 
 // WithOp returns an error annotating err with a hint of the operation name

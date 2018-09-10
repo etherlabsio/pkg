@@ -36,19 +36,9 @@ func (e *Error) UnmarshalJSON(data []byte) error {
 }
 
 // MarshalJSON converts the err object to the JSON representation
-func (e *fundamental) MarshalJSON() ([]byte, error) {
+func (e *stringerr) MarshalJSON() ([]byte, error) {
 	var err jsonError
 	err.Code = Internal
 	err.Msg = e.msg
 	return json.Marshal(err)
 }
-
-// // MarshalJSON converts the err object to the JSON representation
-// func (e *Error) MarshalJSON() ([]byte, error) {
-// 	return e.MarshalJSON()
-// }
-
-// // UnmarshalJSON deserializes JSON back to Error struct
-// func (e *Error) UnmarshalJSON(data []byte) error {
-// 	return e.UnmarshalJSON(data)
-// }

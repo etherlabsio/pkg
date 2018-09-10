@@ -10,7 +10,7 @@ import (
 
 const separator = ": "
 
-// var _ error = (*Error)(nil)
+var _ error = (*Error)(nil)
 
 // Op describes an operation, usually as the package and method,
 // such as "key/server.Lookup".
@@ -144,22 +144,22 @@ func Str(text string) error {
 		_, file, line, _ := runtime.Caller(1)
 		return Errorf("errors.E: bad call from %s:%d", file, line)
 	}
-	return &fundamental{text}
+	return &stringerr{text}
 }
 
-// fundamental is a trivial implementation of error.
-type fundamental struct {
+// stringerr is a trivial implementation of error.
+type stringerr struct {
 	msg string
 }
 
-func (e *fundamental) Error() string {
+func (e *stringerr) Error() string {
 	return e.msg
 }
 
 // Errorf is equivalent to fmt.Errorf, but allows clients to import only this
 // package for all error handling.
 func Errorf(format string, args ...interface{}) error {
-	return &fundamental{msg: fmt.Sprintf(format, args...)}
+	return &stringerr{msg: fmt.Sprintf(format, args...)}
 }
 
 // pad appends str to the buffer if the buffer already has some data.

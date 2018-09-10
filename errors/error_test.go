@@ -32,19 +32,6 @@ func TestDoesNotChangePreviousError(t *testing.T) {
 	}
 }
 
-func TestError_Cause(t *testing.T) {
-	err1 := New("new error", Permission)
-	err2 := New("wrapped context", Op("I will NOT modify err"), err1)
-	l3op := Op("someFunc")
-	err3 := New("level3 err", l3op, Internal, err2)
-	if err := err3.(causer).Cause(); err != err2 {
-		t.Fatalf("Expected cause %v, got %v", err2, err)
-	}
-	if err := err2.(causer).Cause(); err != err1 {
-		t.Fatalf("Expected cause %v, got %v", err1, err)
-	}
-}
-
 func TestError_Error(t *testing.T) {
 	err1 := New("new error", Permission)
 	err2 := New("wrapped context", Op("I will NOT modify err"), err1)
@@ -108,7 +95,7 @@ func TestStr(t *testing.T) {
 	}
 }
 
-func Test_fundamental_Error(t *testing.T) {
+func Test_stringerr_Error(t *testing.T) {
 	type fields struct {
 		msg string
 	}
@@ -118,18 +105,18 @@ func Test_fundamental_Error(t *testing.T) {
 		want   string
 	}{
 		{
-			name:   "new fundamental error",
+			name:   "new stringerr error",
 			fields: fields{"test new error"},
 			want:   "test new error",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			e := &fundamental{
+			e := &stringerr{
 				msg: tt.fields.msg,
 			}
 			if got := e.Error(); got != tt.want {
-				t.Errorf("fundamental.Error() = %v, want %v", got, tt.want)
+				t.Errorf("stringerr.Error() = %v, want %v", got, tt.want)
 			}
 		})
 	}
