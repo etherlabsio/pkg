@@ -81,7 +81,7 @@ func NewServerLogger(debug bool) log.Logger {
 func WithError(l log.Logger, err error) log.Logger {
 	if err != nil {
 		return level.Error(
-			log.With(l, "err", err),
+			log.With(l, "err", err.Error()),
 		)
 	}
 	return l
