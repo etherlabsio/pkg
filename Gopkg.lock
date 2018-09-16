@@ -2,12 +2,12 @@
 
 
 [[projects]]
-  branch = "master"
-  digest = "1:333d5e0ef5a99c871b8e4081a698414dc4f090120b48cb458920c3f6ce8e2f3c"
+  digest = "1:da275eddf2e2ae49229f631fa2ef6ac6eb84f2e6eb0b5e0e6b52f02e9f1e88c6"
   name = "github.com/etherlabsio/errors"
   packages = ["."]
   pruneopts = ""
-  revision = "bf0b0fefcafa8848c418fbd52c5fe8c8c43ade97"
+  revision = "ae7e3367f1fd54d4173fd706d32e1c32ca03af9c"
+  version = "v0.2.3"
 
 [[projects]]
   branch = "master"
@@ -17,6 +17,7 @@
     "endpoint",
     "log",
     "log/level",
+    "transport/http",
   ]
   pruneopts = ""
   revision = "af924e0c9d8df636a7e80a664a3d72d898a09e8b"
@@ -53,7 +54,7 @@
     "github.com/go-kit/kit/endpoint",
     "github.com/go-kit/kit/log",
     "github.com/go-kit/kit/log/level",
-    "github.com/pkg/errors",
+    "github.com/go-kit/kit/transport/http",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

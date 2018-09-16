@@ -26,4 +26,4 @@
 
 [[constraint]]
   name = "github.com/etherlabsio/errors"
-  branch = "master"
+  version = "v0.2.3"

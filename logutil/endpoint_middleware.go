@@ -18,7 +18,7 @@ func LoggingMiddleware(logger log.Logger) endpoint.Middleware {
 					// It should be logged already on the service-level logger middleware
 					return
 				}
-				WithError(logger, err).Log("component", "transport", "took", time.Since(begin))
+				WithError(logger, err).Log("component", "endpoint", "took", time.Since(begin))
 			}(time.Now())
 			return next(ctx, request)
 		}
