@@ -50,6 +50,9 @@ func EncodeJSONResponse(encodeErr httptransport.ErrorEncoder) httptransport.Enco
 		if sc, ok := response.(httptransport.StatusCoder); ok {
 			code = sc.StatusCode()
 		}
+		if response == nil {
+			code = http.StatusNoContent
+		}
 		w.WriteHeader(code)
 		if code == http.StatusNoContent {
 			return nil
