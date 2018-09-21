@@ -62,8 +62,3 @@ func EncodeJSONResponse(encodeErr httptransport.ErrorEncoder) httptransport.Enco
 		return json.NewEncoder(w).Encode(response)
 	}
 }
-
-// // JSONSerializer returns a encodes the data to a JSON response
-// func JSONSerializer(w http.ResponseWriter, v interface{}) error {
-
-// }
