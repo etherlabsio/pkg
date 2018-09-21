@@ -19,13 +19,14 @@ type SerializerFunc func(w http.ResponseWriter, v interface{}) error
 // JSONErrorEncoder takes in a status coder and returns an HTTP error encoder
 func JSONErrorEncoder(statusCoder func(err error) int) httptransport.ErrorEncoder {
 	return func(_ context.Context, err error, w http.ResponseWriter) {
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		if err == nil {
 			err = errors.WithMessage(errYouAreDoingItWrong, "encodeError received nil error")
 			panic(err)
 		}
 		w.WriteHeader(statusCoder(err))
 		e := errors.Serializable(err)
-		JSONSerializer(w, map[string]interface{}{
+		json.NewEncoder(w).Encode(map[string]interface{}{
 			"error": e,
 		})
 	}
@@ -34,6 +35,7 @@ func JSONErrorEncoder(statusCoder func(err error) int) httptransport.ErrorEncode
 // EncodeJSONResponse encodes a response using the appropriate serializer function
 func EncodeJSONResponse(encodeErr httptransport.ErrorEncoder) httptransport.EncodeResponseFunc {
 	return func(ctx context.Context, w http.ResponseWriter, response interface{}) error {
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		if f, ok := response.(endpoint.Failer); ok && f.Failed() != nil {
 			encodeErr(ctx, f.Failed(), w)
 			return nil
@@ -57,12 +59,6 @@ func EncodeJSONResponse(encodeErr httptransport.ErrorEncoder) httptransport.Enco
 		if code == http.StatusNoContent {
 			return nil
 		}
-		return JSONSerializer(w, response)
+		return json.NewEncoder(w).Encode(response)
 	}
-}
-
-// JSONSerializer returns a encodes the data to a JSON response
-func JSONSerializer(w http.ResponseWriter, v interface{}) error {
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	return json.NewEncoder(w).Encode(v)
 }
