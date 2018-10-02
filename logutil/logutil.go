@@ -6,6 +6,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/etherlabsio/errors"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 )
@@ -80,9 +81,11 @@ func NewServerLogger(debug bool) log.Logger {
 // WithError returns a logger with severity as error along with the err value encapsulated
 func WithError(l log.Logger, err error) log.Logger {
 	if err != nil {
-		return level.Error(
-			log.With(l, "err", err.Error()),
-		)
+		l = log.With(l, "err", err.Error())
+		if errors.IsKind(err, errors.Internal) {
+			return level.Error(l)
+		}
+		return level.Info(l)
 	}
 	return l
 }
