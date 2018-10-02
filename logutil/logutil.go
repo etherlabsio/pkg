@@ -85,7 +85,7 @@ func WithError(l log.Logger, err error) log.Logger {
 		if errors.IsKind(err, errors.Internal) {
 			return level.Error(l)
 		}
-		return level.Info(l)
+		return level.Warn(l)
 	}
-	return l
+	return level.Info(l)
 }
