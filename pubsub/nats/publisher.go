@@ -33,7 +33,7 @@ type Publisher struct {
 	timeout   time.Duration
 }
 
-// NewClient constructs a usable Publisher for a single remote method.
+// NewPublisher constructs a usable Publisher for a single remote method.
 func NewPublisher(
 	publisher *nats.Conn,
 	options ...PublisherOption,
@@ -94,7 +94,7 @@ func PublisherVerbose() PublisherOption {
 	}
 }
 
-// Endpoint returns a usable endpoint that invokes the remote endpoint.
+// Publish returns a usable endpoint that invokes the remote endpoint.
 func (p Publisher) Publish(ctx context.Context, subject string, e interface{}) error {
 	const op = "nats.Publish"
 	ctx, cancel := context.WithTimeout(ctx, p.timeout)
