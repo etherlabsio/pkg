@@ -2,12 +2,14 @@ package pubsubnats
 
 import (
 	"fmt"
+	"io"
 	"strings"
 
 	nats "github.com/nats-io/go-nats"
 )
 
 type SubscriptionSet struct {
+	io.Closer
 	Err           error
 	subscriptions []*nats.Subscription
 }
