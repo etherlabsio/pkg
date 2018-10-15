@@ -5,15 +5,11 @@ import (
 	"encoding/json"
 	"reflect"
 
+	natstransport "github.com/go-kit/kit/transport/nats"
+
 	"github.com/etherlabsio/errors"
 	nats "github.com/nats-io/go-nats"
 )
-
-// DecodeRequestFunc extracts a user-domain request object from a publisher
-// request object. It's designed to be used in NATS subscribers, for subscriber-side
-// endpoints. One straightforward DecodeRequestFunc could be something that
-// JSON decodes from the request body to the concrete response type.
-type DecodeRequestFunc func(context.Context, *nats.Msg) (request interface{}, err error)
 
 /*
 	Caution: Do not cargo cult this code. This is meant for specific use case based on our understanding of the message payload possibilities.
@@ -24,7 +20,7 @@ type DecodeRequestFunc func(context.Context, *nats.Msg) (request interface{}, er
 		OrderCancelledTopic:    order.CancelledEvent{},
 	}
 */
-func DecodeNATSJSONEvent(decoderMap map[string]interface{}) DecodeRequestFunc {
+func DecodeNATSJSONEvent(decoderMap map[string]interface{}) natstransport.DecodeRequestFunc {
 	return func(_ context.Context, msg *nats.Msg) (request interface{}, err error) {
 		event, ok := decoderMap[msg.Subject]
 		if !ok {

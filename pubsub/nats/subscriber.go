@@ -3,6 +3,8 @@ package pubsubnats
 import (
 	"context"
 
+	natstransport "github.com/go-kit/kit/transport/nats"
+
 	"github.com/go-kit/kit/endpoint"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
@@ -14,7 +16,7 @@ import (
 // request object. It's designed to be used in NATS subscribers, for subscriber-side
 // endpoints. One straightforward DecodeRequestFunc could be something that
 // JSON decodes from the request body to the concrete response type.
-type DecodeRequestFunc func(context.Context, *nats.Msg) (request interface{}, err error)
+type DecodeRequestFunc natstransport.DecodeRequestFunc
 
 // Subscriber wraps an endpoint and provides nats.MsgHandler.
 type Subscriber struct {
