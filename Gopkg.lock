@@ -18,6 +18,7 @@
     "log",
     "log/level",
     "transport/http",
+    "transport/nats",
   ]
   pruneopts = ""
   revision = "af924e0c9d8df636a7e80a664a3d72d898a09e8b"
@@ -39,6 +40,26 @@
   revision = "b84e30acd515aadc4b783ad4ff83aff3299bdfe0"
 
 [[projects]]
+  digest = "1:f04a78a43f55f089c919beee8ec4a1495dee1bd271548da2cb44bf44699a6a61"
+  name = "github.com/nats-io/go-nats"
+  packages = [
+    ".",
+    "encoders/builtin",
+    "util",
+  ]
+  pruneopts = ""
+  revision = "fb0396ee0bdb8018b0fef30d6d1de798ce99cd05"
+  version = "v1.6.0"
+
+[[projects]]
+  digest = "1:be61e8224b84064109eaba8157cbb4bbe6ca12443e182b6624fdfa1c0dcf53d9"
+  name = "github.com/nats-io/nuid"
+  packages = ["."]
+  pruneopts = ""
+  revision = "289cccf02c178dc782430d534e3c1f5b72af807f"
+  version = "v1.0.0"
+
+[[projects]]
   digest = "1:7365acd48986e205ccb8652cc746f09c8b7876030d53710ea6ef7d0bd0dcd7ca"
   name = "github.com/pkg/errors"
   packages = ["."]
@@ -55,6 +76,8 @@
     "github.com/go-kit/kit/log",
     "github.com/go-kit/kit/log/level",
     "github.com/go-kit/kit/transport/http",
+    "github.com/go-kit/kit/transport/nats",
+    "github.com/nats-io/go-nats",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
