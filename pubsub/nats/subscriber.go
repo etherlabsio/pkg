@@ -21,8 +21,8 @@ type DecodeRequestFunc natstransport.DecodeRequestFunc
 // Subscriber wraps an endpoint and provides nats.MsgHandler.
 type Subscriber struct {
 	e      endpoint.Endpoint
-	dec    DecodeRequestFunc
-	before []RequestFunc
+	dec    natstransport.DecodeRequestFunc
+	before []natstransport.RequestFunc
 	logger log.Logger
 }
 
@@ -30,7 +30,7 @@ type Subscriber struct {
 // the provided endpoint.
 func NewSubscriber(
 	e endpoint.Endpoint,
-	dec DecodeRequestFunc,
+	dec natstransport.DecodeRequestFunc,
 	options ...SubscriberOption,
 ) *Subscriber {
 	s := &Subscriber{
@@ -49,7 +49,7 @@ type SubscriberOption func(*Subscriber)
 
 // SubscriberBefore functions are executed on the publisher request object before the
 // request is decoded.
-func SubscriberBefore(before ...RequestFunc) SubscriberOption {
+func SubscriberBefore(before ...natstransport.RequestFunc) SubscriberOption {
 	return func(s *Subscriber) { s.before = append(s.before, before...) }
 }
 

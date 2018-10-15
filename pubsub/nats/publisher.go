@@ -13,23 +13,12 @@ import (
 	"github.com/nats-io/go-nats"
 )
 
-// EncodeRequestFunc encodes the passed request object into the NATS request
-// object. It's designed to be used in NATS publishers, for publisher-side
-// endpoints. One straightforward EncodeRequestFunc could something that JSON
-// encodes the object directly to the request payload.
-type EncodeRequestFunc natstransport.EncodeRequestFunc
-
-// RequestFunc may take information from a publisher request and put it into a
-// request context. In Subscribers, RequestFuncs are executed prior to invoking the
-// endpoint.
-type RequestFunc natstransport.RequestFunc
-
 // Publisher wraps a URL and provides a method that implements endpoint.Endpoint.
 type Publisher struct {
 	publisher *nats.Conn
-	enc       EncodeRequestFunc
-	before    []RequestFunc
-	after     []RequestFunc
+	enc       natstransport.EncodeRequestFunc
+	before    []natstransport.RequestFunc
+	after     []natstransport.RequestFunc
 	logger    log.Logger
 	timeout   time.Duration
 }
@@ -56,7 +45,7 @@ type PublisherOption func(*Publisher)
 
 // PublisherBefore sets the RequestFuncs that are applied to the outgoing NATS
 // request before it's invoked.
-func PublisherBefore(before ...RequestFunc) PublisherOption {
+func PublisherBefore(before ...natstransport.RequestFunc) PublisherOption {
 	return func(p *Publisher) { p.before = append(p.before, before...) }
 }
 
