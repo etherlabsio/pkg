@@ -7,6 +7,7 @@ import (
 
 	"github.com/etherlabsio/errors"
 	"github.com/go-kit/kit/log/level"
+	natstransport "github.com/go-kit/kit/transport/nats"
 
 	"github.com/go-kit/kit/log"
 	"github.com/nats-io/go-nats"
@@ -16,12 +17,12 @@ import (
 // object. It's designed to be used in NATS publishers, for publisher-side
 // endpoints. One straightforward EncodeRequestFunc could something that JSON
 // encodes the object directly to the request payload.
-type EncodeRequestFunc func(context.Context, *nats.Msg, interface{}) error
+type EncodeRequestFunc natstransport.EncodeRequestFunc
 
 // RequestFunc may take information from a publisher request and put it into a
 // request context. In Subscribers, RequestFuncs are executed prior to invoking the
 // endpoint.
-type RequestFunc func(context.Context, *nats.Msg) context.Context
+type RequestFunc natstransport.RequestFunc
 
 // Publisher wraps a URL and provides a method that implements endpoint.Endpoint.
 type Publisher struct {
