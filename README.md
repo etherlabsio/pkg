@@ -1,7 +1,8 @@
 Pkg
 ==
 
-Pkg is a collection of Go libraries used in projects at ETHER labs. Inspired by and extended from https://github.com/kolide/kit.
+Pkg is a collection of Go libraries used in projects at ETHER labs.
 
-**NOTE** This library is still experimental and not ready for production use. 
+## Prior Art
 
+* [Kolide Kit](https://github.com/kolide/kit)
