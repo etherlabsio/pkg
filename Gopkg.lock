@@ -10,8 +10,7 @@
   version = "v0.2.3"
 
 [[projects]]
-  branch = "master"
-  digest = "1:ac583c054fb4128f4cb8f670c312e905b1907d3f901c80957526dc8a2e29f887"
+  digest = "1:48e65aaf8ce34ffb3e8d56daa9417826db162afbc2040705db331e9a2e9eebe3"
   name = "github.com/go-kit/kit"
   packages = [
     "endpoint",
@@ -21,7 +20,8 @@
     "transport/nats",
   ]
   pruneopts = ""
-  revision = "af924e0c9d8df636a7e80a664a3d72d898a09e8b"
+  revision = "12210fb6ace19e0496167bb3e667dcd91fa9f69b"
+  version = "v0.8.0"
 
 [[projects]]
   digest = "1:6a4a01d58b227c4b6b11111b9f172ec5c17682b82724e58e6daf3f19f4faccd8"

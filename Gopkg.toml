@@ -22,7 +22,7 @@
 
 [[constraint]]
   name = "github.com/go-kit/kit"
-  branch = "master"
+  version = "v0.8.0"
 
 [[constraint]]
   name = "github.com/etherlabsio/errors"
