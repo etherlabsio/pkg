@@ -2,6 +2,25 @@
 
 
 [[projects]]
+  branch = "master"
+  digest = "1:3cce78d5d0090e3f1162945fba60ba74e72e8422e8e41bb9c701afb67237bb65"
+  name = "github.com/alicebob/gopher-json"
+  packages = ["."]
+  pruneopts = ""
+  revision = "5a6b3ba71ee69b77cf64febf8b5a7526ca5eaef0"
+
+[[projects]]
+  digest = "1:8c4ee680f6dd006341afb7e6ac7774537932c3f06c5b35d1d76cdba1b132d73b"
+  name = "github.com/alicebob/miniredis"
+  packages = [
+    ".",
+    "server",
+  ]
+  pruneopts = ""
+  revision = "3657542c8629876a1fa83e0b30a0246a67ffa652"
+  version = "v2.4.5"
+
+[[projects]]
   digest = "1:da275eddf2e2ae49229f631fa2ef6ac6eb84f2e6eb0b5e0e6b52f02e9f1e88c6"
   name = "github.com/etherlabsio/errors"
   packages = ["."]
@@ -30,6 +49,54 @@
   pruneopts = ""
   revision = "390ab7935ee28ec6b286364bba9b4dd6410cb3d5"
   version = "v0.3.0"
+
+[[projects]]
+  digest = "1:024c9473f363a12918e87e7efc778091839beab514b01309a6ecd8aa336c8065"
+  name = "github.com/go-redis/cache"
+  packages = [
+    ".",
+    "internal/lrucache",
+    "internal/singleflight",
+  ]
+  pruneopts = ""
+  revision = "c58ada1e23a3b66593f81c70572c20a0bb805a90"
+  version = "v6.3.5"
+
+[[projects]]
+  digest = "1:0366b920e401e5fe9c9bc1e1d5b0d58b79af8c9c88b292c1db11d13a29ed9f28"
+  name = "github.com/go-redis/redis"
+  packages = [
+    ".",
+    "internal",
+    "internal/consistenthash",
+    "internal/hashtag",
+    "internal/pool",
+    "internal/proto",
+    "internal/singleflight",
+    "internal/util",
+  ]
+  pruneopts = ""
+  revision = "b3d9bf10f6666b2ee5100a6f3f84f4caf3b4e37d"
+  version = "v6.14.2"
+
+[[projects]]
+  digest = "1:3dd078fda7500c341bc26cfbc6c6a34614f295a2457149fc1045cab767cbcf18"
+  name = "github.com/golang/protobuf"
+  packages = ["proto"]
+  pruneopts = ""
+  revision = "aa810b61a9c79d51363740d207bb46cf8e620ed5"
+  version = "v1.2.0"
+
+[[projects]]
+  digest = "1:dcf8316121302735c0ac84e05f4686e3b34e284444435e9a206da48d8be18cb1"
+  name = "github.com/gomodule/redigo"
+  packages = [
+    "internal",
+    "redis",
+  ]
+  pruneopts = ""
+  revision = "9c11da706d9b7902c6da69c592f75637793fe121"
+  version = "v2.0.0"
 
 [[projects]]
   branch = "master"
@@ -67,17 +134,71 @@
   revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
   version = "v0.8.0"
 
+[[projects]]
+  digest = "1:861691d3ae6d4978cf3cd81d5898cdfb59da92f2f022d7d78dc794585d3ab896"
+  name = "github.com/vmihailenco/msgpack"
+  packages = [
+    ".",
+    "codes",
+  ]
+  pruneopts = ""
+  revision = "c4fc0fcdd500af473157759b6d73f935e727ec77"
+  version = "v4.0.1"
+
+[[projects]]
+  branch = "master"
+  digest = "1:87efccabe52f98f3dcefab803efba00d8b961cf942c1472a7db560eb64c125d5"
+  name = "github.com/yuin/gopher-lua"
+  packages = [
+    ".",
+    "ast",
+    "parse",
+    "pm",
+  ]
+  pruneopts = ""
+  revision = "db9ae37725ec65ae634769088627d2d118faf06a"
+
+[[projects]]
+  branch = "master"
+  digest = "1:4ab2fc83e3222b69759dfd717e01d0cf38b133aabfacc29a86057021a2f1abd9"
+  name = "golang.org/x/net"
+  packages = ["context"]
+  pruneopts = ""
+  revision = "927f97764cc334a6575f4b7a1584a147864d5723"
+
+[[projects]]
+  digest = "1:bc09e719c4e2a15d17163f5272d9a3131c45d77542b7fdc53ff518815bc19ab3"
+  name = "google.golang.org/appengine"
+  packages = [
+    ".",
+    "datastore",
+    "internal",
+    "internal/app_identity",
+    "internal/base",
+    "internal/datastore",
+    "internal/log",
+    "internal/modules",
+    "internal/remote_api",
+  ]
+  pruneopts = ""
+  revision = "e9657d882bb81064595ca3b56cbe2546bbabf7b1"
+  version = "v1.4.0"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/alicebob/miniredis",
     "github.com/etherlabsio/errors",
     "github.com/go-kit/kit/endpoint",
     "github.com/go-kit/kit/log",
     "github.com/go-kit/kit/log/level",
     "github.com/go-kit/kit/transport/http",
     "github.com/go-kit/kit/transport/nats",
+    "github.com/go-redis/cache",
+    "github.com/go-redis/redis",
     "github.com/nats-io/go-nats",
+    "github.com/vmihailenco/msgpack",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
