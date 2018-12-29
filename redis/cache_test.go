@@ -24,7 +24,7 @@ func TestCache_CheckUmarshalling(t *testing.T) {
 		Addresses(s.Addr()),
 	)
 
-	c := NewCachev2(client, Namespace(ns))
+	c := NewCache(client, Namespace(ns))
 
 	t.Run("get and set string", func(t *testing.T) {
 		input := "something"

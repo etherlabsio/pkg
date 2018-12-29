@@ -6,6 +6,7 @@ import (
 
 	"github.com/etherlabsio/errors"
 	"github.com/etherlabsio/pkg/logutil"
+	"github.com/go-kit/kit/log"
 
 	"github.com/vmihailenco/msgpack"
 
@@ -14,16 +15,16 @@ import (
 
 // Cache is an alternate implementation of a redis cache with built in pooling
 type Cache struct {
-	client    Client
+	client    *Client
 	codec     *cache.Codec
 	logger    Logger
 	namespace string
 }
 
 // NewCache returns a CacheV2 struct
-func NewCache(client Client, opts ...CacheOption) *Cache {
+func NewCache(client *Client, opts ...CacheOption) *Cache {
 	option := NewCacheOptions(opts...)
-
+	logger := log.With(client.logger, "component", "cache", "source", "redis")
 	return &Cache{
 		client: client,
 		codec: &cache.Codec{
@@ -35,7 +36,8 @@ func NewCache(client Client, opts ...CacheOption) *Cache {
 				return msgpack.Unmarshal(b, v)
 			},
 		},
-		logger: option.Logger,
+		namespace: option.Namespace,
+		logger:    logger,
 	}
 }
 

@@ -15,6 +15,7 @@ type Logger interface {
 type Options struct {
 	Addresses []string
 	Password  string
+	Logger    Logger
 }
 
 type CacheOptions struct {
@@ -35,6 +36,12 @@ func Addresses(addrs ...string) Option {
 func Password(pass string) Option {
 	return func(opt *Options) {
 		opt.Password = pass
+	}
+}
+
+func OptionLogger(l Logger) Option {
+	return func(opt *Options) {
+		opt.Logger = l
 	}
 }
 
@@ -62,26 +69,31 @@ func NewCacheOptions(opts ...CacheOption) CacheOptions {
 		Logger:    log.NewNopLogger(),
 		Namespace: "default",
 	}
-
 	for _, opt := range opts {
 		opt(&option)
 	}
 	return option
 }
 
-type Client redis.UniversalClient
+type Client struct {
+	redis.UniversalClient
+	logger Logger
+}
 
-func NewClient(opts ...Option) Client {
+func NewClient(opts ...Option) *Client {
 	option := NewOptions(opts...)
-	return redis.NewUniversalClient(&redis.UniversalOptions{
-		Addrs:    option.Addresses,
-		Password: option.Password,
-		OnConnect: func(conn *redis.Conn) error {
-			fmt.Println("connected to redis")
-			return nil
-		},
-		PoolSize:     10,
-		MaxRetries:   2,
-		MinIdleConns: 5,
-	})
+	return &Client{
+		UniversalClient: redis.NewUniversalClient(&redis.UniversalOptions{
+			Addrs:    option.Addresses,
+			Password: option.Password,
+			OnConnect: func(conn *redis.Conn) error {
+				fmt.Println("connected to redis")
+				return nil
+			},
+			PoolSize:     10,
+			MaxRetries:   2,
+			MinIdleConns: 5,
+		}),
+		logger: log.NewNopLogger(),
+	}
 }
