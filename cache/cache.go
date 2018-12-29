@@ -9,7 +9,7 @@ const (
 
 // Cache interface is a generic cache definition used for most common types of cacheing operations
 type Cache interface {
-	Set(key string, value interface{}) bool
+	Set(key string, value interface{}, expiry time.Duration) bool
 	Get(key string, marshallableValue interface{}) bool
 	Delete(key string) bool
 }
