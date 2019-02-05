@@ -46,7 +46,7 @@ func SetLevelKey(logger log.Logger, key interface{}) log.Logger {
 func NewServerLogger(debug bool) log.Logger {
 	base := log.NewJSONLogger(log.NewSyncWriter(os.Stderr))
 	base = log.With(base, "ts", log.DefaultTimestampUTC)
-	base = SetLevelKey(base, "severity")
+	base = SetLevelKey(base, "level")
 	base = level.NewInjector(base, level.InfoValue())
 
 	lev := level.AllowInfo()
