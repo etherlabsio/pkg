@@ -12,6 +12,11 @@ import (
 	"github.com/nats-io/go-nats"
 )
 
+// Handler serves messages for NATS
+type Handler interface {
+	ServeMsg(nc *nats.Conn) func(msg *nats.Msg)
+}
+
 // DecodeRequestFunc extracts a user-domain request object from a publisher
 // request object. It's designed to be used in NATS subscribers, for subscriber-side
 // endpoints. One straightforward DecodeRequestFunc could be something that
@@ -32,22 +37,24 @@ func NewSubscriber(
 	e endpoint.Endpoint,
 	dec natstransport.DecodeRequestFunc,
 	options ...SubscriberOption,
-) *Subscriber {
+) Handler {
 	s := &Subscriber{
 		e:      e,
 		dec:    dec,
 		logger: log.NewNopLogger(),
 	}
+
 	for _, option := range options {
 		option(s)
 	}
-	return s
+
+	return NewRecoveryMiddleware(s.logger, s)
 }
 
 // SubscriberOption sets an optional parameter for subscribers.
 type SubscriberOption func(*Subscriber)
 
-// SubscriberBefore functions are executed on the publisher request object before the
+// SubscriberBefore functions are executed on the subscriber request object before the
 // request is decoded.
 func SubscriberBefore(before ...natstransport.RequestFunc) SubscriberOption {
 	return func(s *Subscriber) { s.before = append(s.before, before...) }
@@ -67,15 +74,16 @@ func (s Subscriber) ServeMsg(nc *nats.Conn) func(msg *nats.Msg) {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
+		logger := log.With(s.logger, "subject", msg.Subject)
+
 		for _, f := range s.before {
 			ctx = f(ctx, msg)
 		}
 
 		request, err := s.dec(ctx, msg)
 		if err != nil {
-			s.logger.Log(
+			level.Error(logger).Log(
 				"msg", "error decoding nats msg",
-				"subject", msg.Subject,
 				"err", err,
 			)
 			errHandler(ctx, err, msg, nc)
@@ -84,9 +92,8 @@ func (s Subscriber) ServeMsg(nc *nats.Conn) func(msg *nats.Msg) {
 
 		_, err = s.e(ctx, request)
 		if err != nil {
-			s.logger.Log(
+			level.Error(logger).Log(
 				"msg", "endpoint error for nats msg",
-				"subject", msg.Subject,
 				"err", err,
 			)
 			errHandler(ctx, err, msg, nc)

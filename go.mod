@@ -17,7 +17,7 @@ require (
 	github.com/nats-io/nuid v1.0.0 // indirect
 	github.com/onsi/ginkgo v1.7.0 // indirect
 	github.com/onsi/gomega v1.4.3 // indirect
-	github.com/pkg/errors v0.8.0 // indirect
+	github.com/pkg/errors v0.8.0
 	github.com/vmihailenco/msgpack v4.0.1+incompatible
 	github.com/yuin/gopher-lua v0.0.0-20181214045814-db9ae37725ec // indirect
 	golang.org/x/crypto v0.0.0-20190228161510-8dd112bcdc25 // indirect
