@@ -82,7 +82,7 @@ func (s Subscriber) ServeMsg(nc *nats.Conn) func(msg *nats.Msg) {
 
 		request, err := s.dec(ctx, msg)
 		if err != nil {
-			level.Error(logger).Log(
+			logger.Log(
 				"msg", "error decoding nats msg",
 				"err", err,
 			)
@@ -92,7 +92,7 @@ func (s Subscriber) ServeMsg(nc *nats.Conn) func(msg *nats.Msg) {
 
 		_, err = s.e(ctx, request)
 		if err != nil {
-			level.Error(logger).Log(
+			logger.Log(
 				"msg", "endpoint error for nats msg",
 				"err", err,
 			)
