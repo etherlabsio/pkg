@@ -3,7 +3,6 @@ package pubsubnats
 import (
 	"fmt"
 
-	"github.com/etherlabsio/pkg/logutil"
 	"github.com/go-kit/kit/log"
 	"github.com/nats-io/go-nats"
 	"github.com/pkg/errors"
@@ -26,9 +25,12 @@ func (mw RecoveryMiddleware) ServeMsg(nc *nats.Conn) func(msg *nats.Msg) {
 	return func(msg *nats.Msg) {
 		defer func() {
 			if rvr := recover(); rvr != nil {
-				err := errors.New(fmt.Sprint("Panic: %+v\n", rvr))
+				err := errors.New(fmt.Sprintf("Panic: %+v", rvr))
 				err = errors.WithStack(err)
-				logutil.WithError(mw.logger, err).Log("subject", msg.Subject)
+				mw.logger.Log(
+					"err", fmt.Sprintf("%+v", err),
+					"subject", msg.Subject,
+				)
 			}
 		}()
 

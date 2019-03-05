@@ -12,11 +12,6 @@ import (
 	"github.com/nats-io/go-nats"
 )
 
-// Handler serves messages for NATS
-type Handler interface {
-	ServeMsg(nc *nats.Conn) func(msg *nats.Msg)
-}
-
 // DecodeRequestFunc extracts a user-domain request object from a publisher
 // request object. It's designed to be used in NATS subscribers, for subscriber-side
 // endpoints. One straightforward DecodeRequestFunc could be something that
