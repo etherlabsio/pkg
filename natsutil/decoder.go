@@ -28,10 +28,11 @@ func DecodeNATSJSONEvent(decoderMap map[string]interface{}) natstransport.Decode
 		}
 
 		v := reflect.New(reflect.TypeOf(event)).Interface()
-		if err := json.Unmarshal(msg.Data, v); err != nil {
-			return nil, errors.WithMessage(err, "event decoding failed for subject "+msg.Subject)
+		if len(msg.Data) > 0 {
+			if err := json.Unmarshal(msg.Data, v); err != nil {
+				return nil, errors.WithMessagef(err, "event decoding failed for subject %s and data: %s", msg.Subject, string(msg.Data))
+			}
 		}
-
 		val := reflect.ValueOf(v)
 		if val.Kind() == reflect.Ptr {
 			return val.Elem().Interface(), nil
@@ -39,3 +40,4 @@ func DecodeNATSJSONEvent(decoderMap map[string]interface{}) natstransport.Decode
 		return val.Interface(), nil
 	}
 }
+
