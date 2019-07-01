@@ -9,7 +9,7 @@ import (
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 
-	"github.com/nats-io/nats-go"
+	"github.com/nats-io/nats.go"
 )
 
 // DecodeRequestFunc extracts a user-domain request object from a publisher

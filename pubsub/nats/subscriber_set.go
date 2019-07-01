@@ -5,7 +5,7 @@ import (
 	"io"
 	"strings"
 
-	nats "github.com/nats-io/nats-go"
+	nats "github.com/nats-io/nats.go"
 )
 
 type SubscriptionSet struct {

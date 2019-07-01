@@ -8,7 +8,7 @@ import (
 	natstransport "github.com/go-kit/kit/transport/nats"
 
 	"github.com/etherlabsio/errors"
-	nats "github.com/nats-io/nats-go"
+	nats "github.com/nats-io/nats.go"
 )
 
 /*
