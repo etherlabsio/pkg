@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/etherlabsio/pkg/logutil"
-	"github.com/nats-io/go-nats"
+	"github.com/nats-io/nats.go"
 	"github.com/stretchr/testify/assert"
 )
 

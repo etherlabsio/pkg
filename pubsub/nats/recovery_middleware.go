@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/go-kit/kit/log"
-	"github.com/nats-io/go-nats"
+	"github.com/nats-io/nats.go"
 	"github.com/pkg/errors"
 )
 
