@@ -10,7 +10,7 @@ import (
 	"github.com/etherlabsio/errors"
 	"github.com/go-kit/kit/log"
 	natstransport "github.com/go-kit/kit/transport/nats"
-	nats "github.com/nats-io/go-nats"
+	nats "github.com/nats-io/nats-go"
 )
 
 // JSONErrorEncoder is a nats RPC JSON reply error encoder

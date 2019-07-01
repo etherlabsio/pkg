@@ -10,7 +10,7 @@ import (
 	natstransport "github.com/go-kit/kit/transport/nats"
 
 	"github.com/go-kit/kit/log"
-	"github.com/nats-io/go-nats"
+	"github.com/nats-io/nats-go"
 )
 
 // Publisher wraps a URL and provides a method that implements endpoint.Endpoint.
