@@ -15,6 +15,8 @@ github.com/go-logfmt/logfmt v0.3.0 h1:8HUsc87TaSWLKwrnumgC8/YconD2fJQsRJAsWaPg2i
 github.com/go-logfmt/logfmt v0.3.0/go.mod h1:Qt1PoO58o5twSAckw1HlFXLmHsOX5/0LbT9GBnD5lWE=
 github.com/go-redis/cache v6.3.5+incompatible h1:4OUyoXXYRRQ6tKA4ue3TlPUkBzk3occzjtXBZBxCzgs=
 github.com/go-redis/cache v6.3.5+incompatible/go.mod h1:XNnMdvlNjcZvHjsscEozHAeOeSE5riG9Fj54meG4WT4=
+github.com/go-redis/cache v6.4.0+incompatible h1:ZaeoZofvBZmMr8ZKxzFDmkoRTSp8sxHdJlB3e3T6GDA=
+github.com/go-redis/cache v6.4.0+incompatible/go.mod h1:XNnMdvlNjcZvHjsscEozHAeOeSE5riG9Fj54meG4WT4=
 github.com/go-redis/redis v6.14.2+incompatible h1:UE9pLhzmWf+xHNmZsoccjXosPicuiNaInPgym8nzfg0=
 github.com/go-redis/redis v6.14.2+incompatible/go.mod h1:NAIEuMOZ/fxfXJIrKDQDz8wamY7mA7PouImQ2Jvg6kA=
 github.com/go-redis/redis v6.15.2+incompatible h1:9SpNVG76gr6InJGxoZ6IuuxaCOQwDAhzyXg+Bs+0Sb4=
