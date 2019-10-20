@@ -18,8 +18,10 @@ var (
 	ErrNotHeld = redislock.ErrLockNotHeld
 )
 
+// Option for overriding the default locking settings
 type Option func(*config)
 
+// WithTTL allows one to set a time to live for the mutex lock
 func WithTTL(ttl time.Duration) Option {
 	return func(cfg *config) {
 		if ttl <= 0 {
