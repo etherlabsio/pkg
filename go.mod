@@ -16,7 +16,7 @@ require (
 	github.com/nats-io/go-nats v1.6.0 // indirect
 	github.com/nats-io/nats-server v1.4.1 // indirect
 	github.com/nats-io/nats-server/v2 v2.0.0 // indirect
-	github.com/nats-io/nats.go v1.8.1
+	github.com/nats-io/nats.go v1.9.0
 	github.com/pkg/errors v0.8.1
 	github.com/stretchr/testify v1.4.0
 	github.com/vmihailenco/msgpack v4.0.4+incompatible
