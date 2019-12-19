@@ -4,6 +4,8 @@ github.com/alicebob/miniredis v2.5.0+incompatible h1:yBHoLpsyjupjz3NL3MhKMVkR41j
 github.com/alicebob/miniredis v2.5.0+incompatible/go.mod h1:8HZjEj4yU0dwhYHky+DxYx+6BMjkBbe5ONFIF1MXffk=
 github.com/bsm/redislock v0.4.0 h1:73RFEtaSov5351Wa6EmofMHEqb36av4sudxY+H4HcYo=
 github.com/bsm/redislock v0.4.0/go.mod h1:c8vN+VP8PVF1HAp5e3dn8nTCA8h4XD8Ku3BeZezZ/ag=
+github.com/bsm/redislock v0.4.3 h1:TJ0RzHeSujLSuy4b33OWDknxAzKCdLdit0Hs9kOjElg=
+github.com/bsm/redislock v0.4.3/go.mod h1:mcygIsJknQThqWrlOgiPJ97CGmu3aAdQabg1ZIxT1BA=
 github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e/go.mod h1:nSuG5e5PlCu98SY8svDHJxuZscDgtXS6KTTbou5AhLI=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
