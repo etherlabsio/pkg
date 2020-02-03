@@ -8,7 +8,7 @@ require (
 	github.com/go-kit/kit v0.9.0
 	github.com/go-logfmt/logfmt v0.3.0 // indirect
 	github.com/go-redis/cache v6.4.0+incompatible
-	github.com/go-redis/redis v6.15.6+incompatible
+	github.com/go-redis/redis v6.15.7+incompatible
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/gomodule/redigo v2.0.0+incompatible // indirect
 	github.com/kr/logfmt v0.0.0-20140226030751-b84e30acd515 // indirect
