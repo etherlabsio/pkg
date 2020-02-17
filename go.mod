@@ -5,7 +5,7 @@ require (
 	github.com/alicebob/miniredis v2.5.0+incompatible
 	github.com/bsm/redislock v0.4.0
 	github.com/etherlabsio/errors v0.2.3
-	github.com/go-kit/kit v0.9.0
+	github.com/go-kit/kit v0.10.0
 	github.com/go-logfmt/logfmt v0.3.0 // indirect
 	github.com/go-redis/cache v6.4.0+incompatible
 	github.com/go-redis/redis v6.15.6+incompatible
