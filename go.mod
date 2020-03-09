@@ -3,7 +3,7 @@ module github.com/etherlabsio/pkg
 require (
 	github.com/alicebob/gopher-json v0.0.0-20180125190556-5a6b3ba71ee6 // indirect
 	github.com/alicebob/miniredis v2.5.0+incompatible
-	github.com/bsm/redislock v0.4.0
+	github.com/bsm/redislock v0.5.0
 	github.com/etherlabsio/errors v0.2.3
 	github.com/go-kit/kit v0.9.0
 	github.com/go-logfmt/logfmt v0.3.0 // indirect
