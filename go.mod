@@ -18,7 +18,7 @@ require (
 	github.com/nats-io/nats-server/v2 v2.0.0 // indirect
 	github.com/nats-io/nats.go v1.8.1
 	github.com/pkg/errors v0.8.1
-	github.com/stretchr/testify v1.4.0
+	github.com/stretchr/testify v1.6.0
 	github.com/vmihailenco/msgpack v4.0.4+incompatible
 	github.com/yuin/gopher-lua v0.0.0-20181214045814-db9ae37725ec // indirect
 	golang.org/x/net v0.0.0-20190620200207-3b0461eec859
