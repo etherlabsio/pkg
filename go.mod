@@ -3,7 +3,7 @@ module github.com/etherlabsio/pkg
 require (
 	github.com/alicebob/gopher-json v0.0.0-20180125190556-5a6b3ba71ee6 // indirect
 	github.com/alicebob/miniredis v2.5.0+incompatible
-	github.com/bsm/redislock v0.4.0
+	github.com/bsm/redislock v0.6.0
 	github.com/etherlabsio/errors v0.2.3
 	github.com/go-kit/kit v0.9.0
 	github.com/go-logfmt/logfmt v0.3.0 // indirect
@@ -18,10 +18,10 @@ require (
 	github.com/nats-io/nats-server/v2 v2.0.0 // indirect
 	github.com/nats-io/nats.go v1.8.1
 	github.com/pkg/errors v0.8.1
-	github.com/stretchr/testify v1.4.0
+	github.com/stretchr/testify v1.6.1
 	github.com/vmihailenco/msgpack v4.0.4+incompatible
 	github.com/yuin/gopher-lua v0.0.0-20181214045814-db9ae37725ec // indirect
-	golang.org/x/net v0.0.0-20190620200207-3b0461eec859
+	golang.org/x/net v0.0.0-20200520004742-59133d7f0dd7
 	google.golang.org/appengine v1.4.0 // indirect
 )
 
